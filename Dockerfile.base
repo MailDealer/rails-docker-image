@@ -1,0 +1,59 @@
+FROM maildealer/base
+
+##################################
+######## CHROME & FIREFOX ########
+##################################
+RUN apt-get update -qqy && apt-get -qqy install xvfb xdg-utils fonts-liberation libappindicator3-1 libasound2 libnspr4 libnss3 libxss1 unzip
+
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+RUN dpkg -i google-chrome-stable_current_amd64.deb; apt-get -fy install
+
+RUN wget -O FirefoxSetup.tar.bz2 "https://download.mozilla.org/?product=firefox-latest&os=linux64&lang=en-US"
+RUN mkdir /opt/firefox
+RUN tar xjf FirefoxSetup.tar.bz2 -C /opt/firefox/
+RUN ln -s /opt/firefox/firefox/firefox /usr/local/sbin
+
+###########################
+########## EMOJI ##########
+###########################
+RUN echo "<?xml version='1.0'?> \
+    <!DOCTYPE fontconfig SYSTEM 'fonts.dtd'> \
+    <fontconfig> \
+      <match target='scan'> \
+        <test name='family'> \
+          <string>Noto Color Emoji</string> \
+        </test> \
+        <edit name='scalable' mode='assign'><bool>true</bool></edit> \
+      </match> \
+      <match target='pattern'> \
+        <test name='prgname'> \
+          <string>chrome</string> \
+        </test> \
+        <edit name='family' mode='prepend_first'> \
+          <string>Noto Color Emoji</string> \
+        </edit> \
+      </match> \
+    </fontconfig>" > ~/.fonts.conf
+
+RUN curl https://noto-website-2.storage.googleapis.com/pkgs/NotoColorEmoji-unhinted.zip -LO
+RUN unzip NotoColorEmoji-unhinted.zip
+RUN mkdir -p /usr/local/share/fonts && cp NotoColorEmoji.ttf /usr/local/share/fonts/
+RUN ls -la /usr/local/share/fonts/ && chmod 644 /usr/local/share/fonts/NotoColorEmoji.ttf
+RUN fc-cache -fv && fc-list && fc-match "Noto Color Emoji"
+
+##########################################
+######## SVG convertation support ########
+##########################################
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends inkscape
+
+##########################
+######### WKHTML #########
+##########################
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends xfonts-75dpi xfonts-base
+
+RUN wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.buster_amd64.deb
+RUN dpkg -i wkhtmltox_0.12.5-1.buster_amd64.deb
+
+RUN sed -i 's/name="height" value="16KP"/name="height" value="64KP"/g' /etc/ImageMagick-6/policy.xml
