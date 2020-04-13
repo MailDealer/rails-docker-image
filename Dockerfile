@@ -1,1 +1,1 @@
-Dockerfile.base
+Dockerfile-ruby2.7

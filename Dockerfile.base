@@ -1,4 +1,4 @@
-FROM maildealer/base
+FROM maildealer/rails:ruby2.7
 
 ##################################
 ######## CHROME & FIREFOX ########
