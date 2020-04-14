@@ -1,1 +1,1 @@
-Dockerfile-ruby2.7
+Dockerfile-ruby2.6

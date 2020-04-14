@@ -36,12 +36,6 @@ RUN set -eux; \
 # verify that the binary works
 	gosu nobody true
 
-##########################################
-######## SVG convertation support ########
-##########################################
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends inkscape
-
 #################################
 ######## Clean apt cache ########
 #################################
@@ -50,5 +44,4 @@ RUN rm -rf /var/lib/apt/lists/*
 ##########################
 ########## REST ##########
 ##########################
-
 ADD inputrc /etc/inputrc

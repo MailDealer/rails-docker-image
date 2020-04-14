@@ -16,30 +16,7 @@ RUN ln -s /opt/firefox/firefox/firefox /usr/local/sbin
 ###########################
 ########## EMOJI ##########
 ###########################
-RUN echo "<?xml version='1.0'?> \
-    <!DOCTYPE fontconfig SYSTEM 'fonts.dtd'> \
-    <fontconfig> \
-      <match target='scan'> \
-        <test name='family'> \
-          <string>Noto Color Emoji</string> \
-        </test> \
-        <edit name='scalable' mode='assign'><bool>true</bool></edit> \
-      </match> \
-      <match target='pattern'> \
-        <test name='prgname'> \
-          <string>chrome</string> \
-        </test> \
-        <edit name='family' mode='prepend_first'> \
-          <string>Noto Color Emoji</string> \
-        </edit> \
-      </match> \
-    </fontconfig>" > ~/.fonts.conf
-
-RUN curl https://noto-website-2.storage.googleapis.com/pkgs/NotoColorEmoji-unhinted.zip -LO
-RUN unzip NotoColorEmoji-unhinted.zip
-RUN mkdir -p /usr/local/share/fonts && cp NotoColorEmoji.ttf /usr/local/share/fonts/
-RUN ls -la /usr/local/share/fonts/ && chmod 644 /usr/local/share/fonts/NotoColorEmoji.ttf
-RUN fc-cache -fv && fc-list && fc-match "Noto Color Emoji"
+RUN apt-get install -y --no-install-recommends fonts-noto-color-emoji
 
 #################################
 ######## Clean apt cache ########
